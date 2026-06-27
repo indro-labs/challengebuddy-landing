@@ -20,7 +20,7 @@ const PEOPLE = [
 const BUDDIES = [
   { animal: 'cat',  color: '#f472b6', items: ['halo'],        name: 'ANGEL HALO',   cost: 120, cardBorder: '#fde8ff', cardBg: 'linear-gradient(180deg,#fff5ff,#faf0ff)', boxBg: 'rgba(244,114,182,0.08)',  boxBorder: '#fce7f3', nameColor: '#9d4edd' },
   { animal: 'bear', color: '#60a5fa', items: ['shades'],       name: 'CYBER SHADES', cost: 80,  cardBorder: '#e0f2fe', cardBg: 'linear-gradient(180deg,#f0faff,#e8f7ff)', boxBg: 'rgba(96,165,250,0.08)',   boxBorder: '#bae6fd', nameColor: '#0e7490' },
-  { animal: 'dog',  color: '#34d399', items: ['headphones'],   name: 'BEAT PHONES',  cost: 150, cardBorder: '#d1fae5', cardBg: 'linear-gradient(180deg,#f0fdf9,#e8fff5)', boxBg: 'rgba(52,211,153,0.08)',   boxBorder: '#a7f3d0', nameColor: '#065f46' },
+  { animal: 'dog',  color: '#34d399', items: ['headphones'],   name: 'HEADPHONES',  cost: 150, cardBorder: '#d1fae5', cardBg: 'linear-gradient(180deg,#f0fdf9,#e8fff5)', boxBg: 'rgba(52,211,153,0.08)',   boxBorder: '#a7f3d0', nameColor: '#065f46' },
   { animal: 'cat',  color: '#a78bfa', items: ['wizard'],       name: 'WIZARD HAT',   cost: 120, cardBorder: '#ede8ff', cardBg: 'linear-gradient(180deg,#faf8ff,#f5f0ff)', boxBg: 'rgba(167,139,250,0.08)', boxBorder: '#ddd6fe', nameColor: '#5b21b6' },
   { animal: 'bear', color: '#fb923c', items: ['cape'],         name: 'HERO CAPE',    cost: 100, cardBorder: '#ffe4d0', cardBg: 'linear-gradient(180deg,#fff7f0,#fff2e8)', boxBg: 'rgba(251,146,60,0.08)',   boxBorder: '#fed7aa', nameColor: '#92400e' },
   { animal: 'dog',  color: '#fbbf24', items: ['sword'],        name: 'PIXEL BLADE',  cost: 180, cardBorder: '#fde68a', cardBg: 'linear-gradient(180deg,#fffbeb,#fffce8)', boxBg: 'rgba(251,191,36,0.08)',   boxBorder: '#fde68a', nameColor: '#78350f' },
@@ -30,7 +30,7 @@ const marqueePeople = [...PEOPLE, ...PEOPLE, ...PEOPLE, ...PEOPLE];
 
 export default function App() {
   const [submitted, setSubmitted] = useState(false);
-  const [count, setCount] = useState(847);
+  const [count, setCount] = useState(50);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSuccess = () => {
@@ -140,7 +140,7 @@ export default function App() {
               </div>
               <div className="how-num" style={{ color:'#c4b5fd' }}>01</div>
               <h3 className="how-title">Create a challenge</h3>
-              <p className="how-body">Pick a goal — run daily, read 20 min, hit the gym — then invite your crew and set real milestone rewards for hitting it.</p>
+              <p className="how-body">Pick a goal (e.g. walk 10k steps, read 20 min, hit the gym) then invite your friends and set real milestone rewards for hitting it.</p>
             </div>
             <div className="how-arrow">▸</div>
             <div className="how-step">
@@ -149,7 +149,7 @@ export default function App() {
               </div>
               <div className="how-num" style={{ color:'#22d3ee' }}>02</div>
               <h3 className="how-title">Log daily proof</h3>
-              <p className="how-body">Snap a quick photo every day. No photos, no credit. Your crew sees it live and can cheer, react, or nudge the slackers.</p>
+              <p className="how-body">Snap a quick photo every day. No photos, no credit! Your friends sees it live.</p>
             </div>
             <div className="how-arrow">▸</div>
             <div className="how-step">
@@ -158,7 +158,7 @@ export default function App() {
               </div>
               <div className="how-num" style={{ color:'#fbbf24' }}>03</div>
               <h3 className="how-title">Win together</h3>
-              <p className="how-body">Climb the live leaderboard, keep your streak alive, and cash in milestone rewards when you cross the finish line.</p>
+              <p className="how-body">Climb the leaderboard, keep your streak alive, and receive in milestone rewards when you cross the finish line.</p>
             </div>
           </div>
         </div>
@@ -173,8 +173,8 @@ export default function App() {
           </div>
           <div className="features-grid">
             {[
-              { icon:'camera' as const, color:'#22d3ee', bg:'rgba(34,211,238,0.12)', border:'rgba(34,211,238,0.35)', glow:'rgba(34,211,238,0.18)', title:'Photo proof required', body:'No more "yeah I did it, trust me." Snap a photo, submit it, your crew sees it live. Zero wiggle room for excuses.' },
-              { icon:'trophy' as const, color:'#fbbf24', bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.35)',  glow:'rgba(251,191,36,0.18)',  title:'Live leaderboard', body:"See who's crushing it and who's slipping — updated the instant someone logs proof. Nothing hides from the board." },
+              { icon:'camera' as const, color:'#22d3ee', bg:'rgba(34,211,238,0.12)', border:'rgba(34,211,238,0.35)', glow:'rgba(34,211,238,0.18)', title:'Photo proof required', body:'No more "yeah I did it, trust me." Snap a photo, submit it, your friends sees it. No excuses!' },
+              { icon:'trophy' as const, color:'#fbbf24', bg:'rgba(251,191,36,0.12)',  border:'rgba(251,191,36,0.35)',  glow:'rgba(251,191,36,0.18)',  title:'Live leaderboard', body:"See who's winning it and who's slipping. Updated the instant someone logs proof. Nothing hides from the board." },
               { icon:'gift'   as const, color:'#fb923c', bg:'rgba(251,146,60,0.12)',  border:'rgba(251,146,60,0.35)',  glow:'rgba(251,146,60,0.18)',  title:'Custom milestone rewards', body:'Real stakes make people show up. Set custom rewards at 25%, 50%, and the finish line. Losers buy pizza. Winners skip dishes.' },
               { icon:'person' as const, color:'#8b5cf6', bg:'rgba(124,58,237,0.12)',  border:'rgba(124,58,237,0.35)',  glow:'rgba(124,58,237,0.18)',  title:'Your pixel buddy', body:'Earn coins for every proof you log. Spend them on hats, capes, and gear for your avatar. Your buddy levels up as you do.' },
             ].map(f => (
@@ -239,7 +239,7 @@ export default function App() {
               </div>
               <div className="who-eyebrow" style={{ color:'#9d8cc4' }}>FRIEND GROUPS</div>
               <h3 className="who-title">The squad that goals together</h3>
-              <p className="who-body">"We're all doing Dry January." "Let's finally run a 5K." ChallengeBuddy is what makes the plan actually stick.</p>
+              <p className="who-body">"We're all doing 10k steps." ChallengeBuddy is what makes the plan actually stick.</p>
             </div>
             <div className="who-card" style={{ borderColor:'#d1fae5',background:'linear-gradient(180deg,#f0fdf9,#faf8ff)' }}>
               <div className="who-avatars">
@@ -256,7 +256,7 @@ export default function App() {
               </div>
               <div className="who-eyebrow" style={{ color:'#fbbf24' }}>SOLO QUITTERS</div>
               <h3 className="who-title">You've tried going it alone</h3>
-              <p className="who-body">Research says you're 65% more likely to reach a goal with an accountability partner. ChallengeBuddy is that — times five.</p>
+              <p className="who-body">Research says you're 65% more likely to reach a goal with an accountability partner. ChallengeBuddy is that times five.</p>
             </div>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function App() {
         <div className="cta-content">
           <div className="section-eyebrow" style={{ color:'#7c3aed' }}>▸ JOIN THE WAITLIST ◂</div>
           <h2 className="cta-h2">Ready to level up?</h2>
-          <p className="cta-sub">Be first when ChallengeBuddy launches. Early signups get a free PRO month and exclusive founder-only gear for their buddy.</p>
+          <p className="cta-sub">Be first when ChallengeBuddy launches. Early signups get exclusive founder-only gear for their buddy.</p>
           <WaitlistForm count={count} submitted={submitted} onSuccess={handleSuccess} variant="cta" />
         </div>
       </section>
