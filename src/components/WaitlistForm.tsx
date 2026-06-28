@@ -1,8 +1,7 @@
 import { useState, type KeyboardEvent } from 'react';
 import PixelIcon from './PixelIcon';
 
-// Replace with your Formspree form ID: https://formspree.io/
-const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID ?? 'YOUR_FORM_ID';
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
 interface Props {
   count: number;
@@ -24,7 +23,7 @@ export default function WaitlistForm({ count, onSuccess, submitted, variant = 'h
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(`${API_URL}/api/waitlist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ email }),
