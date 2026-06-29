@@ -2,67 +2,49 @@
 
 React + TypeScript frontend with a Go backend that stores waitlist emails in PostgreSQL.
 
+**Deployed stack:**
+- Frontend → [Netlify](https://challengebuddy.netlify.app)
+- Backend → [Render](https://challengebuddy-backend.onrender.com)
+- Database → [Neon](https://neon.tech) (hosted PostgreSQL)
+
 ---
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18+)
 - [Go](https://go.dev/) (v1.22+)
-- [PostgreSQL 17](https://www.postgresql.org/) via Homebrew (`brew install postgresql@17`)
+
+No local PostgreSQL needed — the database is hosted on Neon.
 
 ---
 
 ## First-time setup
 
-### 1. Start PostgreSQL
+### 1. Configure environment variables
 
-PostgreSQL needs to be running before the backend can connect.
-
-```bash
-brew services start postgresql@17
-```
-
-Verify it's up:
-
-```bash
-pg_isready -h localhost -p 5432
-# expected: localhost:5432 - accepting connections
-```
-
-### 2. Create the database and table
-
-Only needed once. The database `challengebuddy_waitlist` and the `waitlist_emails` table were already created during initial setup, so skip this if you've done it before.
-
-```bash
-createdb challengebuddy_waitlist
-psql -d challengebuddy_waitlist -f server/database/migrations/001_create_waitlist_emails.sql
-```
-
-### 3. Configure environment variables
-
-**Frontend** — `challengebuddy-landing/.env` (already present):
+**Frontend** — create `challengebuddy-landing/.env`:
 ```
 VITE_API_URL=http://localhost:3001
 ```
 
-**Backend** — `challengebuddy-landing/server/.env` (already present):
+**Backend** — create `challengebuddy-landing/server/.env` (copy from `server/.env.example`):
 ```
 PORT=3001
 ENV=development
-DATABASE_URL=postgres://challengebuddy:challengebuddy@localhost:5432/challengebuddy_waitlist?sslmode=disable
+DATABASE_URL=<neon connection string>
 CORS_ORIGIN=http://localhost:5173
 ADMIN_API_KEY=<your admin key>
 ```
 
-> Neither `.env` file is committed to git. If you're setting up on a new machine, copy `server/.env.example` to `server/.env` and fill in the values.
+> Neither `.env` file is committed to git. Get the Neon connection string and admin key from the team.
 
-### 4. Install frontend dependencies
+### 2. Install frontend dependencies
 
 ```bash
 npm install
 ```
 
-### 5. Install backend dependencies
+### 3. Install backend dependencies
 
 ```bash
 cd server
@@ -89,7 +71,24 @@ npm run dev
 # http://localhost:5173
 ```
 
-The waitlist form on the landing page will POST emails directly to the backend, which stores them in PostgreSQL.
+The local backend connects to the hosted Neon database, so any emails submitted locally are stored in the same database as production.
+
+---
+
+## Deployment
+
+Pushes to `main` auto-deploy on both Netlify and Render.
+
+| Service | What it does | Auto-deploy |
+|---------|-------------|-------------|
+| Netlify | Builds and serves the React frontend | Yes, on push to `main` |
+| Render | Runs the Go backend API | Yes, on push to `main` |
+| Neon | Hosts the PostgreSQL database | Manual migrations only |
+
+**If you add a new database migration**, run it manually against Neon:
+```bash
+psql $DATABASE_URL -f server/database/migrations/<migration-file>.sql
+```
 
 ---
 
@@ -102,31 +101,18 @@ The waitlist form on the landing page will POST emails directly to the backend, 
 | `GET` | `/api/waitlist` | admin | List all waitlist emails |
 | `DELETE` | `/api/waitlist/{id}` | admin | Remove a waitlist entry by ID |
 
-### Admin authentication
+### Checking waitlist emails
 
-Admin routes require an `X-Admin-Key` header matching the `ADMIN_API_KEY` in `server/.env`.
-
-**List all emails:**
 ```bash
-curl http://localhost:3001/api/waitlist \
+curl https://challengebuddy-backend.onrender.com/api/waitlist \
   -H "X-Admin-Key: <your admin key>"
 ```
 
-**Delete an entry:**
+### Deleting an entry
+
 ```bash
-curl -X DELETE http://localhost:3001/api/waitlist/<id> \
+curl -X DELETE https://challengebuddy-backend.onrender.com/api/waitlist/<id> \
   -H "X-Admin-Key: <your admin key>"
-```
-
----
-
-## Stopping services
-
-Stop the Go server and frontend with `Ctrl+C` in each terminal.
-
-Stop PostgreSQL when you're done:
-```bash
-brew services stop postgresql@17
 ```
 
 ---
@@ -137,7 +123,7 @@ brew services stop postgresql@17
 challengebuddy-landing/
 ├── src/                        # React frontend
 │   └── components/
-│       └── WaitlistForm.tsx    # Submits to backend /api/waitlist
+│       └── WaitlistForm.tsx    # Submits to /api/waitlist
 ├── server/                     # Go backend
 │   ├── cmd/api/main.go         # Entrypoint
 │   ├── internal/
