@@ -14,6 +14,7 @@ export default function WaitlistForm({ count, onSuccess, submitted, variant = 'h
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [slowLoad, setSlowLoad] = useState(false);
 
   const submit = async () => {
     if (!email || !email.includes('@')) {
@@ -22,6 +23,8 @@ export default function WaitlistForm({ count, onSuccess, submitted, variant = 'h
     }
     setError('');
     setLoading(true);
+    setSlowLoad(false);
+    const slowTimer = setTimeout(() => setSlowLoad(true), 5000);
     try {
       const res = await fetch(`${API_URL}/api/waitlist`, {
         method: 'POST',
@@ -36,7 +39,9 @@ export default function WaitlistForm({ count, onSuccess, submitted, variant = 'h
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
+      clearTimeout(slowTimer);
       setLoading(false);
+      setSlowLoad(false);
     }
   };
 
@@ -85,6 +90,11 @@ export default function WaitlistForm({ count, onSuccess, submitted, variant = 'h
           {loading ? '...' : variant === 'cta' ? "I'm In →" : 'Join Waitlist →'}
         </button>
       </div>
+      {slowLoad && (
+        <div style={{ fontFamily: 'Nunito', fontSize: 13, color: '#b0a4cc', marginBottom: 8 }}>
+          Hang tight, this may take a moment...
+        </div>
+      )}
       {error && (
         <div style={{ fontFamily: 'Nunito', fontSize: 13, color: '#f87171', marginBottom: 8 }}>
           {error}
