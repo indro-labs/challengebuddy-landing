@@ -8,9 +8,11 @@ import (
 )
 
 type Entry struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	CreatedAt string `json:"created_at"`
+	ID        string  `json:"id"`
+	Email     string  `json:"email"`
+	Animal    *string `json:"animal,omitempty"`
+	Color     *string `json:"color,omitempty"`
+	CreatedAt string  `json:"created_at"`
 }
 
 type service struct {
@@ -21,15 +23,27 @@ func newService(db *pgxpool.Pool) *service {
 	return &service{db: db}
 }
 
-func (s *service) add(ctx context.Context, email string) (*Entry, error) {
+// animal and color are optional gear-picker choices from the claim flow; pass
+// "" when unknown (e.g. the plain email-only waitlist form) to store NULL.
+func (s *service) add(ctx context.Context, email, animal, color string) (*Entry, error) {
+	var animalArg, colorArg *string
+	if animal != "" {
+		animalArg = &animal
+	}
+	if color != "" {
+		colorArg = &color
+	}
+
 	var e Entry
 	err := s.db.QueryRow(ctx,
-		`INSERT INTO waitlist_emails (email)
-		 VALUES ($1)
-		 ON CONFLICT (email) DO NOTHING
-		 RETURNING id, email, created_at::text`,
-		email,
-	).Scan(&e.ID, &e.Email, &e.CreatedAt)
+		`INSERT INTO waitlist_emails (email, animal, color)
+		 VALUES ($1, $2, $3)
+		 ON CONFLICT (email) DO UPDATE SET
+		   animal = COALESCE(EXCLUDED.animal, waitlist_emails.animal),
+		   color  = COALESCE(EXCLUDED.color, waitlist_emails.color)
+		 RETURNING id, email, animal, color, created_at::text`,
+		email, animalArg, colorArg,
+	).Scan(&e.ID, &e.Email, &e.Animal, &e.Color, &e.CreatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("add waitlist entry: %w", err)
 	}
@@ -38,7 +52,7 @@ func (s *service) add(ctx context.Context, email string) (*Entry, error) {
 
 func (s *service) list(ctx context.Context) ([]Entry, error) {
 	rows, err := s.db.Query(ctx,
-		`SELECT id, email, created_at::text FROM waitlist_emails ORDER BY created_at DESC`,
+		`SELECT id, email, animal, color, created_at::text FROM waitlist_emails ORDER BY created_at DESC`,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("list waitlist: %w", err)
@@ -48,7 +62,7 @@ func (s *service) list(ctx context.Context) ([]Entry, error) {
 	var entries []Entry
 	for rows.Next() {
 		var e Entry
-		if err := rows.Scan(&e.ID, &e.Email, &e.CreatedAt); err != nil {
+		if err := rows.Scan(&e.ID, &e.Email, &e.Animal, &e.Color, &e.CreatedAt); err != nil {
 			return nil, fmt.Errorf("scan entry: %w", err)
 		}
 		entries = append(entries, e)

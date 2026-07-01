@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from 'react';
 import Avatar from './Avatar';
 import PixelIcon from './PixelIcon';
 import type { AnimalType } from '../lib/pixelArt';
+import confettiImg from '../assets/Items/effect_confetti.png';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
@@ -37,7 +38,7 @@ interface Props {
   onSuccess: () => void;
 }
 
-export default function ClaimBadgeFlow({
+export default function ClaimGearFlow({
   step, animal, color, onSelectAnimal, onSelectColor, onNext, onBack, onClose, count, onSuccess,
 }: Props) {
   const [email, setEmail] = useState('');
@@ -55,7 +56,7 @@ export default function ClaimBadgeFlow({
       const res = await fetch(`${API_URL}/api/waitlist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, animal, color }),
       });
       if (res.ok) {
         onSuccess();
@@ -92,7 +93,7 @@ export default function ClaimBadgeFlow({
           <>
             <div className="section-eyebrow" style={{ color: '#7c3aed', textAlign: 'center' }}>▸ STEP 1 OF 2 ◂</div>
             <h2 className="section-h2" style={{ textAlign: 'center', marginBottom: 14 }}>Pick your buddy.</h2>
-            <p className="how-body" style={{ textAlign: 'center', marginBottom: 34 }}>Choose your animal and color. This is the buddy that unlocks your Stampede badge.</p>
+            <p className="how-body" style={{ textAlign: 'center', marginBottom: 34 }}>Choose your animal and color. This is the buddy that unlocks your Stampede gear.</p>
 
             <div className="animal-picker">
               {ANIMALS.map(a => (
@@ -126,7 +127,7 @@ export default function ClaimBadgeFlow({
         {step === 'email' && (
           <>
             <div className="section-eyebrow" style={{ color: '#7c3aed', textAlign: 'center' }}>▸ STEP 2 OF 2 ◂</div>
-            <h2 className="section-h2" style={{ textAlign: 'center', marginBottom: 14 }}>Reserve your badge.</h2>
+            <h2 className="section-h2" style={{ textAlign: 'center', marginBottom: 14 }}>Reserve your gear.</h2>
             <p className="how-body" style={{ textAlign: 'center', marginBottom: 28 }}>Enter your email so we know where to send it.</p>
 
             <div className="flow-preview">
@@ -148,7 +149,7 @@ export default function ClaimBadgeFlow({
               <div style={{ fontFamily: 'Nunito', fontSize: 13, color: '#f87171', marginBottom: 8 }}>{error}</div>
             )}
             <button className="btn-waitlist" onClick={submit} disabled={loading}>
-              {loading ? '...' : 'Reserve my badge'}
+              {loading ? '...' : 'Reserve my gear'}
             </button>
             <div>
               <button className="flow-back-link" onClick={onBack}>← Back</button>
@@ -158,13 +159,14 @@ export default function ClaimBadgeFlow({
 
         {step === 'confirm' && (
           <div className="flow-confirm">
+            <img className="flow-confetti" src={confettiImg} alt="" aria-hidden="true" />
             <div className="flow-preview">
-              <Avatar animal={animal} color={color} size={140} crown />
+              <Avatar animal={animal} color={color} size={140} />
             </div>
             <div className="section-eyebrow" style={{ color: '#34d399', textAlign: 'center' }}>▸ WELCOME ABOARD ◂</div>
             <h2 className="section-h2" style={{ textAlign: 'center', marginBottom: 18 }}>You're in.</h2>
             <p className="how-body" style={{ textAlign: 'center', maxWidth: 480, margin: '0 auto 28px' }}>
-              Your Stampede badge is reserved. We will send your login the moment ChallengeBuddy launches.
+              Your Stampede gear is reserved. We will send your login the moment ChallengeBuddy launches.
             </p>
             <div className="success-tag" style={{ marginBottom: 28 }}>YOU ARE #{count} IN LINE</div>
             <div>

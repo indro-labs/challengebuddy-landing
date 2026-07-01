@@ -6,11 +6,18 @@ package waitlist
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+var hexColorRE = regexp.MustCompile(`^#[0-9a-fA-F]{6}$`)
+
+func isHexColor(s string) bool {
+	return hexColorRE.MatchString(s)
+}
 
 type handler struct {
 	svc        *service
@@ -21,9 +28,13 @@ func newHandler(db *pgxpool.Pool, adminAPIKey string) *handler {
 	return &handler{svc: newService(db), adminAPIKey: adminAPIKey}
 }
 
+var validAnimals = map[string]bool{"cat": true, "bear": true, "dog": true}
+
 func (h *handler) add(w http.ResponseWriter, r *http.Request) {
 	var body struct {
-		Email string `json:"email"`
+		Email  string `json:"email"`
+		Animal string `json:"animal"`
+		Color  string `json:"color"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid request body"})
@@ -36,13 +47,19 @@ func (h *handler) add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	entry, err := h.svc.add(r.Context(), body.Email)
+	// animal/color are optional gear-picker choices; silently drop anything
+	// that doesn't look right instead of failing the whole signup over it.
+	body.Animal = strings.ToLower(strings.TrimSpace(body.Animal))
+	if !validAnimals[body.Animal] {
+		body.Animal = ""
+	}
+	body.Color = strings.TrimSpace(body.Color)
+	if !isHexColor(body.Color) {
+		body.Color = ""
+	}
+
+	entry, err := h.svc.add(r.Context(), body.Email, body.Animal, body.Color)
 	if err != nil {
-		// ON CONFLICT DO NOTHING returns no rows — treat as already registered (still success)
-		if entry == nil {
-			writeJSON(w, http.StatusOK, map[string]string{"message": "already on the waitlist"})
-			return
-		}
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "something went wrong"})
 		return
 	}

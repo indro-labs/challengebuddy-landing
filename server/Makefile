@@ -7,4 +7,4 @@ build:
 	go build -o bin/api ./cmd/api
 
 migrate:
-	psql $$DATABASE_URL -f database/migrations/001_create_waitlist_emails.sql
+	for f in database/migrations/*.sql; do psql $$DATABASE_URL -f $$f; done

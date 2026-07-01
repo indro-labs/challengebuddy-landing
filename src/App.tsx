@@ -3,7 +3,7 @@ import './index.css';
 import Avatar from './components/Avatar';
 import PixelIcon from './components/PixelIcon';
 import WaitlistForm from './components/WaitlistForm';
-import ClaimBadgeFlow, { type FlowStep } from './components/ClaimBadgeFlow';
+import ClaimGearFlow, { type FlowStep } from './components/ClaimGearFlow';
 import type { AnimalType } from './lib/pixelArt';
 
 const PEOPLE = [
@@ -35,8 +35,8 @@ export default function App() {
   const [count, setCount] = useState(50);
   const [menuOpen, setMenuOpen] = useState(false);
   const [flowStep, setFlowStep] = useState<FlowStep | 'closed'>('closed');
-  const [badgeAnimal, setBadgeAnimal] = useState<AnimalType>('cat');
-  const [badgeColor, setBadgeColor] = useState('#f472b6');
+  const [gearAnimal, setGearAnimal] = useState<AnimalType>('cat');
+  const [gearColor, setGearColor] = useState('#f472b6');
 
   const handleSuccess = () => {
     setSubmitted(true);
@@ -112,21 +112,21 @@ export default function App() {
         <div className="hero-content">
           <div className="badge-live">
             <div className="badge-dot" />
-            <span className="badge-text">CLAIM YOUR STAMPEDE BADGE</span>
+            <span className="badge-text">CLAIM YOUR STAMPEDE GEAR</span>
           </div>
           <h1 className="hero-h1">Make goals<br />a group sport.</h1>
-          <p className="hero-sub">Pick a challenge, invite your crew, and log daily photo proof. ChallengeBuddy turns personal goals into a game you actually finish — together.</p>
-          <p className="hero-tagline">Sign up and unlock an exclusive Stampede badge. Yours forever, never available again.</p>
+          <p className="hero-sub">Pick a challenge, invite your crew, and log daily photo proof. ChallengeBuddy turns personal goals into a game you actually finish together.</p>
+          <p className="hero-tagline">Sign up and claim limited time stampede gear for your buddy. Yours forever, never available again.</p>
           <div id="waitlist">
             {submitted ? (
               <div className="success-box-sm">
                 <div className="success-title-sm">You're in!</div>
-                <div className="success-sub-sm">Your Stampede badge is reserved.</div>
+                <div className="success-sub-sm">Your Stampede gear is reserved.</div>
                 <div className="success-tag">YOU ARE #{count} IN LINE</div>
               </div>
             ) : (
               <>
-                <button className="btn-waitlist" onClick={() => setFlowStep('character')}>Claim my badge →</button>
+                <button className="btn-waitlist" onClick={() => setFlowStep('character')}>Claim my gear →</button>
                 <div className="form-note" style={{ marginTop: 14 }}>
                   <PixelIcon icon="lock" color="#b0a4cc" size={10} />
                   No spam ever · {count}+ people already in line
@@ -138,12 +138,12 @@ export default function App() {
       </section>
 
       {flowStep !== 'closed' && (
-        <ClaimBadgeFlow
+        <ClaimGearFlow
           step={flowStep}
-          animal={badgeAnimal}
-          color={badgeColor}
-          onSelectAnimal={setBadgeAnimal}
-          onSelectColor={setBadgeColor}
+          animal={gearAnimal}
+          color={gearColor}
+          onSelectAnimal={setGearAnimal}
+          onSelectColor={setGearColor}
           onNext={() => setFlowStep('email')}
           onBack={() => setFlowStep('character')}
           onClose={() => setFlowStep('closed')}
@@ -317,7 +317,7 @@ export default function App() {
           <div className="section-eyebrow" style={{ color:'#7c3aed' }}>▸ JOIN THE WAITLIST ◂</div>
           <h2 className="cta-h2">Ready to level up?</h2>
           <p className="cta-sub">Be first when ChallengeBuddy launches. Early signups get exclusive founder-only gear for their buddy.</p>
-          <p className="hero-tagline">Claim limited time stampede gear for your buddy</p>
+          <p className="hero-tagline">Claim limited time stampede gear for your buddy.</p>
           <WaitlistForm count={count} submitted={submitted} onSuccess={handleSuccess} variant="cta" />
         </div>
       </section>

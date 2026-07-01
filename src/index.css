@@ -131,7 +131,8 @@ a { text-decoration: none; }
 .color-swatch.selected { transform: scale(1.18); box-shadow: 0 0 0 2px #1f0f3d; }
 .flow-back-link { cursor: pointer; margin-top: 16px; background: none; border: none; font-family: Nunito; font-weight: 800; font-size: 14px; color: #9d8cc4; }
 .flow-back-link:hover { color: #7c3aed; }
-.flow-confirm { padding-top: 20px; animation: pop 0.5s ease both; }
+.flow-confirm { position: relative; padding-top: 20px; animation: pop 0.5s ease both; }
+.flow-confetti { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 420px; max-width: 110%; image-rendering: pixelated; pointer-events: none; z-index: -1; }
 
 /* ── FOOTER ── */
 .footer { padding: 36px 40px; background: #faf8ff; border-top: 1.5px solid #e0d5f8; }
