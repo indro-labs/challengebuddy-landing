@@ -36,7 +36,8 @@ a { text-decoration: none; }
 .badge-dot { width: 7px; height: 7px; border-radius: 2px; background: #22d3ee; animation: blink-dot 1.2s steps(1) infinite; flex: none; }
 .badge-text { font-family: Silkscreen, monospace; font-size: 10px; letter-spacing: 2px; color: #0e7490; }
 .hero-h1 { font-family: 'Press Start 2P', monospace; font-size: 40px; line-height: 1.6; color: #1f0f3d; text-shadow: 0 5px 0 #c4b5fd, 0 6px 28px rgba(124,58,237,0.22); margin: 0 0 24px; }
-.hero-sub { font-family: Nunito; font-size: 18px; font-weight: 700; color: #6b5b8e; line-height: 1.65; margin: 0 0 38px; }
+.hero-sub { font-family: Nunito; font-size: 18px; font-weight: 700; color: #6b5b8e; line-height: 1.65; margin: 0 0 16px; }
+.hero-tagline { font-family: Nunito; font-style: italic; font-size: 15px; font-weight: 700; color: #0e7490; line-height: 1.6; margin: 0 0 34px; }
 
 /* ── FORM ── */
 .form-row { display: flex; gap: 10px; max-width: 470px; margin: 0 auto 14px; }
@@ -59,7 +60,7 @@ a { text-decoration: none; }
 .ticker-wrap { padding: 20px 0; background: #f0eaff; border-top: 1.5px solid #e0d5f8; border-bottom: 1.5px solid #e0d5f8; overflow: hidden; user-select: none; }
 .ticker-track { display: flex; flex-wrap: nowrap; width: max-content; animation: ticker 32s linear infinite; align-items: center; will-change: transform; }
 .ticker-item { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 18px; flex-shrink: 0; }
-.ticker-avatar-box { width: 56px; height: 62px; border-radius: 14px; background: #fff; border: 2px solid #e0d5f8; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; padding-bottom: 3px; }
+.ticker-avatar-box { width: 112px; height: 124px; border-radius: 14px; background: #fff; border: 2px solid #e0d5f8; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; padding-bottom: 3px; }
 .ticker-name { font-family: Silkscreen, monospace; font-size: 8px; color: #8b7caa; letter-spacing: 0.5px; }
 
 /* ── SECTIONS ── */
@@ -88,9 +89,9 @@ a { text-decoration: none; }
 
 /* ── BUDDY ── */
 .buddy-section { padding: 100px 40px; background: #fff; border-top: 1.5px solid rgba(124,58,237,0.08); }
-.buddy-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 40px; }
+.buddy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 40px; }
 .buddy-card { border-radius: 18px; padding: 18px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.buddy-avatar-box { width: 74px; height: 82px; border-radius: 14px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; }
+.buddy-avatar-box { width: 148px; height: 164px; border-radius: 14px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; }
 .buddy-name { font-family: Silkscreen, monospace; font-size: 8px; letter-spacing: 0.5px; margin-bottom: 6px; text-align: center; }
 .buddy-cost { display: flex; align-items: center; justify-content: center; gap: 4px; }
 .buddy-cost-num { font-family: 'Press Start 2P', monospace; font-size: 9px; color: #b45309; }
@@ -100,10 +101,10 @@ a { text-decoration: none; }
 
 /* ── WHO ── */
 .who-section { padding: 100px 40px; background: #ffffff; }
-.who-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .who-card { border: 2px solid; border-radius: 24px; padding: 32px; }
 .who-avatars { display: flex; align-items: flex-end; margin-bottom: 26px; }
-.who-avatar-bubble { width: 52px; height: 52px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+.who-avatar-bubble { width: 104px; height: 104px; border-radius: 50%; border: 3px solid #fff; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
 .who-eyebrow { font-family: Silkscreen; font-size: 9px; letter-spacing: 1.5px; margin-bottom: 11px; }
 .who-title { font-family: Nunito; font-weight: 900; font-size: 18px; color: #1f0f3d; margin: 0 0 11px; }
 .who-body { font-family: Nunito; font-size: 14px; font-weight: 700; color: #7267a0; line-height: 1.65; margin: 0; }
@@ -114,6 +115,24 @@ a { text-decoration: none; }
 .cta-h2 { font-family: 'Press Start 2P', monospace; font-size: 30px; line-height: 1.65; color: #1f0f3d; text-shadow: 0 5px 0 #c4b5fd, 0 6px 24px rgba(124,58,237,0.2); margin: 0 0 18px; }
 .cta-sub { font-family: Nunito; font-size: 17px; font-weight: 700; color: #6b5b8e; margin: 0 0 40px; line-height: 1.65; }
 
+/* ── CLAIM BADGE FLOW ── */
+.flow-overlay { position: fixed; inset: 0; z-index: 200; background: radial-gradient(1100px 700px at 50% -5%, #e8e0ff, #f7f5ff 65%, #faf8ff); overflow-y: auto; animation: fadeUp 0.3s ease both; }
+.flow-header { display: flex; align-items: center; justify-content: space-between; max-width: 1160px; margin: 0 auto; padding: 20px 40px; }
+.flow-close { cursor: pointer; width: 36px; height: 36px; border-radius: 10px; background: #fff; border: 2px solid #e0d5f8; display: flex; align-items: center; justify-content: center; transform: rotate(45deg); transition: filter 0.15s; }
+.flow-close:hover { filter: brightness(0.96); }
+.flow-body { max-width: 640px; margin: 0 auto; padding: 20px 20px 100px; text-align: center; }
+.flow-preview { display: flex; justify-content: center; margin: 8px auto 28px; }
+.animal-picker { display: flex; gap: 16px; justify-content: center; margin: 0 0 32px; flex-wrap: wrap; }
+.animal-card { cursor: pointer; padding: 16px 20px; border-radius: 20px; border: 2.5px solid #e0d5f8; background: #fff; display: flex; flex-direction: column; align-items: center; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
+.animal-card.selected { border-color: #7c3aed; background: #f5f0ff; box-shadow: 0 4px 0 #c4b5fd; transform: translateY(-3px); }
+.animal-card-label { margin-top: 6px; font-family: Silkscreen, monospace; font-size: 9px; letter-spacing: 1px; color: #6b5b8e; }
+.color-picker { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px; }
+.color-swatch { cursor: pointer; width: 30px; height: 30px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #e0d5f8; transition: transform 0.15s, box-shadow 0.15s; padding: 0; }
+.color-swatch.selected { transform: scale(1.18); box-shadow: 0 0 0 2px #1f0f3d; }
+.flow-back-link { cursor: pointer; margin-top: 16px; background: none; border: none; font-family: Nunito; font-weight: 800; font-size: 14px; color: #9d8cc4; }
+.flow-back-link:hover { color: #7c3aed; }
+.flow-confirm { padding-top: 20px; animation: pop 0.5s ease both; }
+
 /* ── FOOTER ── */
 .footer { padding: 36px 40px; background: #faf8ff; border-top: 1.5px solid #e0d5f8; }
 .footer-inner { max-width: 1160px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
@@ -123,8 +142,13 @@ a { text-decoration: none; }
 .footer-right { display: flex; align-items: center; gap: 8px; font-family: Silkscreen; font-size: 9px; color: #b0a4cc; letter-spacing: 1px; }
 
 /* ── MOBILE ── */
+@media (max-width: 860px) {
+  .who-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 768px) {
   .navbar-inner { padding: 0 20px; }
+  .flow-header { padding: 20px; }
+  .flow-body { padding: 20px 20px 80px; }
   .navbar-links { display: none; flex-direction: column; position: absolute; top: 68px; left: 0; right: 0; background: rgba(255,255,255,0.97); backdrop-filter: blur(16px); padding: 20px; gap: 16px; border-bottom: 1.5px solid rgba(124,58,237,0.1); z-index: 99; }
   .navbar-links.open { display: flex; }
   .hamburger { display: flex; }
@@ -138,7 +162,6 @@ a { text-decoration: none; }
   .how-steps { flex-direction: column; align-items: center; gap: 32px; }
   .how-arrow { display: none; }
   .features-grid { grid-template-columns: 1fr; }
-  .buddy-grid { grid-template-columns: repeat(3, 1fr); }
   .who-grid { grid-template-columns: 1fr; }
   .cta-section { padding: 64px 20px; }
   .cta-h2 { font-size: 20px; }
@@ -149,4 +172,7 @@ a { text-decoration: none; }
 @media (max-width: 480px) {
   .buddy-grid { grid-template-columns: repeat(2, 1fr); }
   .success-box { padding: 24px 20px; }
+}
+@media (max-width: 400px) {
+  .buddy-grid { grid-template-columns: 1fr; }
 }

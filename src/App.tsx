@@ -3,6 +3,8 @@ import './index.css';
 import Avatar from './components/Avatar';
 import PixelIcon from './components/PixelIcon';
 import WaitlistForm from './components/WaitlistForm';
+import ClaimBadgeFlow, { type FlowStep } from './components/ClaimBadgeFlow';
+import type { AnimalType } from './lib/pixelArt';
 
 const PEOPLE = [
   { name: 'Maya',  animal: 'cat',  color: '#f472b6', items: ['halo']        },
@@ -32,10 +34,18 @@ export default function App() {
   const [submitted, setSubmitted] = useState(false);
   const [count, setCount] = useState(50);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [flowStep, setFlowStep] = useState<FlowStep | 'closed'>('closed');
+  const [badgeAnimal, setBadgeAnimal] = useState<AnimalType>('cat');
+  const [badgeColor, setBadgeColor] = useState('#f472b6');
 
   const handleSuccess = () => {
     setSubmitted(true);
     setCount(c => c + 1);
+  };
+
+  const handleFlowSuccess = () => {
+    handleSuccess();
+    setFlowStep('confirm');
   };
 
   const scrollToWaitlist = () => {
@@ -60,7 +70,7 @@ export default function App() {
           <div className={`navbar-links${menuOpen ? ' open' : ''}`}>
             <a href="#how" className="navbar-link" onClick={() => setMenuOpen(false)}>How it works</a>
             <a href="#features" className="navbar-link" onClick={() => setMenuOpen(false)}>Features</a>
-            <button className="btn-join-nav" onClick={scrollToWaitlist}>Join Waitlist</button>
+            <button className="btn-join-nav" onClick={scrollToWaitlist}>Sign Up</button>
           </div>
         </div>
       </nav>
@@ -79,38 +89,68 @@ export default function App() {
 
         {/* Left floating avatars */}
         <div className="hero-float" style={{ left:'3%',top:'15%',animation:'bob 4.2s ease-in-out infinite',filter:'drop-shadow(0 12px 24px rgba(124,58,237,0.18))' }}>
-          <Avatar animal="cat" color="#f472b6" size={98} items={['halo']} />
+          <Avatar animal="cat" color="#f472b6" size={196} items={['halo']} />
         </div>
         <div className="hero-float" style={{ left:'9%',bottom:'19%',animation:'bob2 5.6s ease-in-out 0.7s infinite',filter:'drop-shadow(0 10px 20px rgba(96,165,250,0.2))' }}>
-          <Avatar animal="bear" color="#60a5fa" size={74} items={['shades']} />
+          <Avatar animal="bear" color="#60a5fa" size={148} items={['shades']} />
         </div>
         <div className="hero-float" style={{ left:'19%',top:'8%',animation:'bob3 6.2s ease-in-out 1.3s infinite',opacity:0.7 }}>
-          <Avatar animal="dog" color="#34d399" size={58} items={['headphones']} />
+          <Avatar animal="dog" color="#34d399" size={116} items={['headphones']} />
         </div>
         {/* Right floating avatars */}
         <div className="hero-float" style={{ right:'3%',top:'13%',animation:'bob2 4.6s ease-in-out 0.4s infinite',filter:'drop-shadow(0 12px 24px rgba(124,58,237,0.18))' }}>
-          <Avatar animal="cat" color="#a78bfa" size={94} items={['wizard']} />
+          <Avatar animal="cat" color="#a78bfa" size={188} items={['wizard']} />
         </div>
         <div className="hero-float" style={{ right:'9%',bottom:'21%',animation:'bob 5.2s ease-in-out 1.1s infinite',filter:'drop-shadow(0 10px 20px rgba(251,146,60,0.2))' }}>
-          <Avatar animal="bear" color="#fb923c" size={76} items={['cape']} />
+          <Avatar animal="bear" color="#fb923c" size={152} items={['cape']} />
         </div>
         <div className="hero-float" style={{ right:'19%',top:'7%',animation:'bob3 5.8s ease-in-out 0.9s infinite',opacity:0.7 }}>
-          <Avatar animal="dog" color="#fbbf24" size={60} items={['sword']} />
+          <Avatar animal="dog" color="#fbbf24" size={120} items={['sword']} />
         </div>
 
         {/* Center content */}
         <div className="hero-content">
           <div className="badge-live">
             <div className="badge-dot" />
-            <span className="badge-text">WAITLIST NOW OPEN</span>
+            <span className="badge-text">CLAIM YOUR STAMPEDE BADGE</span>
           </div>
           <h1 className="hero-h1">Make goals<br />a group sport.</h1>
           <p className="hero-sub">Pick a challenge, invite your crew, and log daily photo proof. ChallengeBuddy turns personal goals into a game you actually finish — together.</p>
+          <p className="hero-tagline">Sign up and unlock an exclusive Stampede badge. Yours forever, never available again.</p>
           <div id="waitlist">
-            <WaitlistForm count={count} submitted={submitted} onSuccess={handleSuccess} variant="hero" />
+            {submitted ? (
+              <div className="success-box-sm">
+                <div className="success-title-sm">You're in!</div>
+                <div className="success-sub-sm">Your Stampede badge is reserved.</div>
+                <div className="success-tag">YOU ARE #{count} IN LINE</div>
+              </div>
+            ) : (
+              <>
+                <button className="btn-waitlist" onClick={() => setFlowStep('character')}>Claim my badge →</button>
+                <div className="form-note" style={{ marginTop: 14 }}>
+                  <PixelIcon icon="lock" color="#b0a4cc" size={10} />
+                  No spam ever · {count}+ people already in line
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
+
+      {flowStep !== 'closed' && (
+        <ClaimBadgeFlow
+          step={flowStep}
+          animal={badgeAnimal}
+          color={badgeColor}
+          onSelectAnimal={setBadgeAnimal}
+          onSelectColor={setBadgeColor}
+          onNext={() => setFlowStep('email')}
+          onBack={() => setFlowStep('character')}
+          onClose={() => setFlowStep('closed')}
+          count={count}
+          onSuccess={handleFlowSuccess}
+        />
+      )}
 
       {/* ── TICKER ── */}
       <div className="ticker-wrap">
@@ -118,7 +158,7 @@ export default function App() {
           {marqueePeople.map((p, i) => (
             <div key={i} className="ticker-item">
               <div className="ticker-avatar-box">
-                <Avatar animal={p.animal} color={p.color} size={50} items={p.items as any} />
+                <Avatar animal={p.animal} color={p.color} size={100} items={p.items as any} />
               </div>
               <span className="ticker-name">{p.name}</span>
             </div>
@@ -208,7 +248,7 @@ export default function App() {
             {BUDDIES.map(b => (
               <div key={b.name} className="buddy-card" style={{ border:`2px solid ${b.cardBorder}`,background:b.cardBg }}>
                 <div className="buddy-avatar-box" style={{ background:b.boxBg,border:`1.5px solid ${b.boxBorder}` }}>
-                  <Avatar animal={b.animal} color={b.color} size={64} items={b.items as any} />
+                  <Avatar animal={b.animal} color={b.color} size={128} items={b.items as any} />
                 </div>
                 <div style={{ textAlign:'center' }}>
                   <div className="buddy-name" style={{ color:b.nameColor }}>{b.name}</div>
@@ -233,9 +273,9 @@ export default function App() {
           <div className="who-grid">
             <div className="who-card" style={{ borderColor:'#e0d5f8',background:'linear-gradient(180deg,#fdf5ff,#faf8ff)' }}>
               <div className="who-avatars">
-                <div className="who-avatar-bubble" style={{ background:'#f0eaff',marginRight:-12,zIndex:3 }}><Avatar animal="cat"  color="#f472b6" size={46} items={['halo']} /></div>
-                <div className="who-avatar-bubble" style={{ background:'#f0eaff',marginRight:-12,zIndex:2 }}><Avatar animal="dog"  color="#34d399" size={46} items={['headphones']} /></div>
-                <div className="who-avatar-bubble" style={{ background:'#f0eaff',zIndex:1 }}><Avatar animal="bear" color="#60a5fa" size={46} items={['shades']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#f0eaff',marginRight:-12,zIndex:3 }}><Avatar animal="cat"  color="#f472b6" size={92} items={['halo']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#f0eaff',marginRight:-12,zIndex:2 }}><Avatar animal="dog"  color="#34d399" size={92} items={['headphones']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#f0eaff',zIndex:1 }}><Avatar animal="bear" color="#60a5fa" size={92} items={['shades']} /></div>
               </div>
               <div className="who-eyebrow" style={{ color:'#9d8cc4' }}>FRIEND GROUPS</div>
               <h3 className="who-title">The squad that goals together</h3>
@@ -243,8 +283,8 @@ export default function App() {
             </div>
             <div className="who-card" style={{ borderColor:'#d1fae5',background:'linear-gradient(180deg,#f0fdf9,#faf8ff)' }}>
               <div className="who-avatars">
-                <div className="who-avatar-bubble" style={{ background:'#ecfdf5',marginRight:-12,zIndex:2 }}><Avatar animal="bear" color="#fb923c" size={46} items={['cape']} /></div>
-                <div className="who-avatar-bubble" style={{ background:'#ecfdf5',zIndex:1 }}><Avatar animal="cat"  color="#a78bfa" size={46} items={['wizard']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#ecfdf5',marginRight:-12,zIndex:2 }}><Avatar animal="bear" color="#fb923c" size={92} items={['cape']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#ecfdf5',zIndex:1 }}><Avatar animal="cat"  color="#a78bfa" size={92} items={['wizard']} /></div>
               </div>
               <div className="who-eyebrow" style={{ color:'#34d399' }}>GYM PARTNERS</div>
               <h3 className="who-title">Accountability that bites back</h3>
@@ -252,7 +292,7 @@ export default function App() {
             </div>
             <div className="who-card" style={{ borderColor:'#fde68a',background:'linear-gradient(180deg,#fffbeb,#faf8ff)' }}>
               <div className="who-avatars">
-                <div className="who-avatar-bubble" style={{ background:'#fef9c3',borderColor:'#fef9c3' }}><Avatar animal="dog" color="#fbbf24" size={46} items={['sword']} /></div>
+                <div className="who-avatar-bubble" style={{ background:'#fef9c3',borderColor:'#fef9c3' }}><Avatar animal="dog" color="#fbbf24" size={92} items={['sword']} /></div>
               </div>
               <div className="who-eyebrow" style={{ color:'#fbbf24' }}>SOLO QUITTERS</div>
               <h3 className="who-title">You've tried going it alone</h3>
@@ -268,15 +308,16 @@ export default function App() {
         <div style={{ position:'absolute',top:-90,left:'6%',width:300,height:300,borderRadius:'50%',background:'radial-gradient(circle,rgba(124,58,237,0.1),transparent 70%)',pointerEvents:'none' }} />
         <div style={{ position:'absolute',bottom:-80,right:'6%',width:340,height:340,borderRadius:'50%',background:'radial-gradient(circle,rgba(34,211,238,0.08),transparent 70%)',pointerEvents:'none' }} />
         <div style={{ position:'absolute',left:'5%',top:'50%',transform:'translateY(-52%)',animation:'bob 4s ease-in-out infinite',opacity:0.6 }}>
-          <Avatar animal="cat" color="#f472b6" size={80} items={['halo']} />
+          <Avatar animal="cat" color="#f472b6" size={160} items={['halo']} />
         </div>
         <div style={{ position:'absolute',right:'5%',top:'50%',transform:'translateY(-52%)',animation:'bob2 4.6s ease-in-out 0.5s infinite',opacity:0.6 }}>
-          <Avatar animal="bear" color="#fb923c" size={80} items={['cape']} />
+          <Avatar animal="bear" color="#fb923c" size={160} items={['cape']} />
         </div>
         <div className="cta-content">
           <div className="section-eyebrow" style={{ color:'#7c3aed' }}>▸ JOIN THE WAITLIST ◂</div>
           <h2 className="cta-h2">Ready to level up?</h2>
           <p className="cta-sub">Be first when ChallengeBuddy launches. Early signups get exclusive founder-only gear for their buddy.</p>
+          <p className="hero-tagline">Claim limited time stampede gear for your buddy</p>
           <WaitlistForm count={count} submitted={submitted} onSuccess={handleSuccess} variant="cta" />
         </div>
       </section>
